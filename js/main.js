@@ -27,8 +27,8 @@ function validarCantidad(cantidad) {
     return true;
 }// ValidarCantidad
 
-function getPrecio(){
-    return Math.round(Math.random()*10000)/100;
+function getPrecio() {
+    return Math.round(Math.random() * 10000) / 100;
 }//getPrecio
 
 btnAgregar.addEventListener("click", function (event) {
@@ -56,7 +56,7 @@ btnAgregar.addEventListener("click", function (event) {
 
     } //!ValidadCantidad
 
-    if(isValid){
+    if (isValid) {
         let precio = getPrecio();
         cont++;
         let row = `<tr>
@@ -65,20 +65,45 @@ btnAgregar.addEventListener("click", function (event) {
                         <td>${txtNumber.value}</td>
                         <td>${precio}</td>
                     </tr<`;
-        
+
         totalEnProductos += Number(txtNumber.value);
         costoTotal += precio * Number(txtNumber.value);
 
         cuerpoTabla.insertAdjacentHTML("beforeend", row)
         contadorProductos.innerText = cont;
         productosTotal.innerText = totalEnProductos;
-        precioTotal.innerText = new Intl.NumberFormat("es-MX", 
-                    { style: "currency", currency: "MXN" }).format(costoTotal);
+        precioTotal.innerText = new Intl.NumberFormat("es-MX",
+            { style: "currency", currency: "MXN" }).format(costoTotal);
 
-        txtName.value="";
-        txtNumber.value="";
+        let resumen = {
+            "cont": cont,
+            "totalEnProductos": totalEnProductos,
+            "costoTotal": costoTotal
+        };
+
+        localStorage.setItem("resumen", JSON.stringify(resumen));
+
+
+        txtName.value = "";
+        txtNumber.value = "";
         txtName.focus();
     }//isValid
 
-    
+
 });//btnAgregar click
+
+window.addEventListener("load", function (event) {
+    event.preventDefault();
+    if(this.localStorage.getItem("resumen") !=null) {
+        let resumen = JSON.parse(this.localStorage.getItem("resumen"));
+        cont = resumen.cont;
+        totalEnProductos = resumen.totalEnProductos;
+        costoTotal = resumen.costoTotal;
+    }// ! =null
+
+    contadorProductos.innerText = cont;
+    productosTotal.innerText = totalEnProductos;
+    precioTotal.innerText = new Intl.NumberFormat("es-MX",
+        { style: "currency", currency: "MXN" }).format(costoTotal);
+
+}); //window load

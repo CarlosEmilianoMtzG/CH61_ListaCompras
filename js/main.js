@@ -8,6 +8,8 @@ const productosTotal = document.getElementById("productosTotal");
 const precioTotal = document.getElementById("precioTotal");
 const tablaListaCompras = document.getElementById("tablaListaCompras");
 const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0);
+const btnClear = document.getElementById("btnClear");
+
 
 let cont = 0;
 let totalEnProductos = 0;
@@ -24,6 +26,7 @@ function validarCantidad(cantidad) {
         return false;
     }//isNan
     if (Number(cantidad) <= 0) {
+        return false;
     } //<=0
     return true;
 }// ValidarCantidad
@@ -37,7 +40,7 @@ btnAgregar.addEventListener("click", function (event) {
     let isValid = true;
     txtName.style.border = "";
     txtNumber.style.border = "";
-    alertValidacionesTexto.innerHTML += "";
+    alertValidacionesTexto.innerHTML = "";
     alertValidaciones.style.display = "none";
 
     if (txtName.value.length < 3) {
@@ -65,7 +68,7 @@ btnAgregar.addEventListener("click", function (event) {
                         <td>${txtName.value}</td>
                         <td>${txtNumber.value}</td>
                         <td>${precio}</td>
-                    </tr<`;
+                    </tr>`;
 
         let elemento = {
             "cont" : cont,
@@ -102,6 +105,37 @@ btnAgregar.addEventListener("click", function (event) {
 
 });//btnAgregar click
 
+
+btnClear.addEventListener("click", function (event) {
+    event.preventDefault();
+    
+    txtName.value = "";
+    txtNumber.value = "";
+    
+    txtName.style.border = "";
+    txtNumber.style.border = "";
+    
+    alertValidacionesTexto.innerHTML = "";
+    alertValidaciones.style.display = "none";
+    
+    cuerpoTabla.innerHTML = "";
+    
+    cont = 0;
+    totalEnProductos = 0;
+    costoTotal = 0;
+    datos = new Array();
+    
+    contadorProductos.innerText = 0;
+    productosTotal.innerText = 0;
+    precioTotal.innerText = "$0";
+    
+    localStorage.removeItem("datos");
+    localStorage.removeItem("resumen");
+    
+    txtName.focus();
+    
+});//btnClear click
+
 window.addEventListener("load", function (event) {
     event.preventDefault();
     if(this.localStorage.getItem("datos") !=null) {
@@ -112,7 +146,7 @@ window.addEventListener("load", function (event) {
                         <td>${e.nombre}</td>
                         <td>${e.cantidad}</td>
                         <td>${e.precio}</td>
-                    </tr<`;
+                    </tr>`;
         cuerpoTabla.insertAdjacentHTML("beforeend", row)
         });
 
